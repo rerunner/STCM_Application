@@ -1,0 +1,65 @@
+//
+// Declaration of the necessary Unit Creation functions. In the future, this 
+// file will be automatically created by a System Configuration Tool.
+//
+// These declarations must only be included by DemoBoardUnits.cpp
+// (= the file containing the Global Board Config)
+//
+
+DECLARE_UNIT_CREATION_FUNCTION(CreateStreamingTerminator)
+DECLARE_UNIT_CREATION_FUNCTION(CreateStreamingInOutTerminator)
+DECLARE_UNIT_CREATION_FUNCTION(CreateMessageDispatcher)
+DECLARE_UNIT_CREATION_FUNCTION(CreateSingleStreamingProxyUnit)
+
+DECLARE_UNIT_CREATION_FUNCTION(CreatePhysicalAC3Decoder)
+DECLARE_UNIT_CREATION_FUNCTION(CreatePulseAudioRenderer)
+DECLARE_UNIT_CREATION_FUNCTION(CreateSDL2AudioRenderer)
+
+DECLARE_UNIT_CREATION_FUNCTION(CreateStandardBoard)
+
+
+//
+// Chain Links and Mixers
+//
+DECLARE_UNIT_CREATION_FUNCTION(CreateChainLinkInput)
+DECLARE_UNIT_CREATION_FUNCTION(CreateChainLinkOutput)
+
+
+//
+// Generic streaming units
+//
+DECLARE_UNIT_CREATION_FUNCTION(CreateGenericStreamingChainUnit)
+DECLARE_UNIT_CREATION_FUNCTION(CreateLoggingStreamingUnit)
+DECLARE_UNIT_CREATION_FUNCTION(CreateDumpingStreamingUnit)
+
+//
+// Primary Video Transducer
+//
+DECLARE_UNIT_CREATION_FUNCTION(CreateMPEGVideoDecoder)
+
+//
+// Alternate DVD Demux
+//
+DECLARE_UNIT_CREATION_FUNCTION(CreateDVDStreamDemux)
+DECLARE_UNIT_CREATION_FUNCTION(CreateStreamReplicatorStreamingUnit)
+DECLARE_UNIT_CREATION_FUNCTION(CreateDVDPESVideoSplitterUnit)
+DECLARE_UNIT_CREATION_FUNCTION(CreateDVDPESAudioSplitterUnit)
+DECLARE_UNIT_CREATION_FUNCTION(CreateDVDPESSubpictureSplitterUnit)
+DECLARE_UNIT_CREATION_FUNCTION(CreateDVDPESStreamUnpackerUnit)
+
+// Memory stuff
+DECLARE_UNIT_CREATION_FUNCTION(CreateHeapMemoryPool)
+DECLARE_UNIT_CREATION_FUNCTION(CreateMemoryMappedIO)
+
+// Declare global MemoryOverlapDetector creation function.
+DECLARE_UNIT_CREATION_FUNCTION (CreateMemoryOverlapDetector)
+
+// Declare global MemoryPartition creation function.
+DECLARE_UNIT_CREATION_FUNCTION (CreateMemoryPartition)
+
+// Declare global LinearMemoryPool creation function.
+DECLARE_UNIT_CREATION_FUNCTION (CreateLinearMemoryPool)
+
+// Declare global Hash1Trackbuffer creation function.
+DECLARE_UNIT_CREATION_FUNCTION (CreateHash1Trackbuffer)
+

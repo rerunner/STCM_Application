@@ -1,5 +1,5 @@
-/// 
-/// @brief Global Board Configuration Structure 
+///
+/// @brief Global Board Configuration Structure
 ///
 /// @par SCOPE:
 /// Customer Implementation File
@@ -197,7 +197,6 @@ static const VDRUID VDRUID_TELETEXT_DECODER                              = 0x400
 static const VDRUID VDRUID_VPS_DECODER                                   = 0x40003260;
 
 
-
 //
 // Program Stream Transducer
 //
@@ -261,23 +260,23 @@ static const VDRUID VDRUID_VIDEO_OUTPUT                                  = 0x400
 
 
 //
-// DV Decoder 
+// DV Decoder
 //
 static const VDRUID VDRUID_DV_FRAME_DECODER                              = 0x40007000;
 static const VDRUID VDRUID_DV_DATA_HANDLER                               = 0x40007001;
-static const VDRUID VDRUID_WIN32_DV_DECODER                              = 0x40007002; 
-static const VDRUID VDRUID_DV_AUDIO_DECODER                              = 0x40007003; 
-static const VDRUID VDRUID_WIN32_DV_AUDIO_DECODER                        = 0x40007004; 
-static const VDRUID VDRUID_DV_CAPTURE_VIDEO_LINK_INPUT                   = 0x40007005; 
+static const VDRUID VDRUID_WIN32_DV_DECODER                              = 0x40007002;
+static const VDRUID VDRUID_DV_AUDIO_DECODER                              = 0x40007003;
+static const VDRUID VDRUID_WIN32_DV_AUDIO_DECODER                        = 0x40007004;
+static const VDRUID VDRUID_DV_CAPTURE_VIDEO_LINK_INPUT                   = 0x40007005;
 static const VDRUID VDRUID_STM_8000_DV_CAPTURE                           = 0x40007006;
-static const VDRUID VDRUID_DV_VIDEO_PREPROCESSOR_LINK_OUTPUT             = 0x40007007; 
-static const VDRUID VDRUID_FORMAT_CONVERTER                              = 0x40007008; 
+static const VDRUID VDRUID_DV_VIDEO_PREPROCESSOR_LINK_OUTPUT             = 0x40007007;
+static const VDRUID VDRUID_FORMAT_CONVERTER                              = 0x40007008;
 
 
-// 
+//
 // IEEE 1394
 //
-static const VDRUID VDRUID_IEEE_1394_BUS                                 = 0x40007010; 
+static const VDRUID VDRUID_IEEE_1394_BUS                                 = 0x40007010;
 
 
 // interrupt levels
@@ -360,15 +359,15 @@ uint64 GlobalBoardConfig[] =
                DWORD_PARAM(0),       // boardRevision
                DWORD_PARAM(0),       // driverVersion
                DWORD_PARAM(1),       // driverRevision
-               DWORD_PARAM(24032009),// driverBuild 
+               DWORD_PARAM(24032009),// driverBuild
                PARAMS_DONE,
       // The dependency list of the board determines the units an application can
       // request to be part of a Unit Set. So here we specify the units accessible
       // by applications.
-		
+
       // The unit IDs of the following units are public, and thus defined in header files
       // located somewhere in VDR/Interface:
-      VDRUID_GENERIC_PLAYBACK_POOL_ALLOCATOR,   PARAMS_DONE,		
+      VDRUID_GENERIC_PLAYBACK_POOL_ALLOCATOR,   PARAMS_DONE,
       VDRUID_DVD_STREAM_TRANSDUCER_PROXY,       PARAMS_DONE, // DVD Program Stream Streaming Chain
    MAPPING_DONE,
 
@@ -396,7 +395,7 @@ uint64 GlobalBoardConfig[] =
    // The memory partition for all playback devices.
    CREATE_UNIT (VDRUID_PLAYBACK_MEMORY_PARTITION, CreateMemoryPartition),
                 DWORD_PARAM(PLAYBACK_MEMORY_PARTITION_BASE),
-                DWORD_PARAM(PLAYBACK_MEMORY_PARTITION_SIZE), 
+                DWORD_PARAM(PLAYBACK_MEMORY_PARTITION_SIZE),
                 PARAMS_DONE, // LMI memory!
       VDRUID_MEMORYOVERLAPDETECTOR, PARAMS_DONE,
    MAPPING_DONE,
@@ -414,7 +413,7 @@ uint64 GlobalBoardConfig[] =
       VDRUID_PLAYBACK_MEMORY_PARTITION, PARAMS_DONE,
       VDRUID_MEMORY_MESSAGE_DISPATCHER, PARAMS_DONE,
    MAPPING_DONE,
-	
+
    // The linear memory pool for playback applications.
    CREATE_UNIT (VDRUID_GENERIC_PLAYBACK_POOL_ALLOCATOR, CreateLinearMemoryPool),
                 PARAMS_DONE,
@@ -430,15 +429,15 @@ uint64 GlobalBoardConfig[] =
    CREATE_UNIT (VDRUID_STREAMING_DEBUG_1, CreateStreamingTerminator),
                 PARAMS_DONE,
    MAPPING_DONE,
-   
+
    CREATE_UNIT (VDRUID_STREAMING_DEBUG_2, CreateStreamingTerminator),
                 PARAMS_DONE,
    MAPPING_DONE,
-   
+
    CREATE_UNIT (VDRUID_STREAMING_DEBUG_3, CreateStreamingTerminator),
                 PARAMS_DONE,
    MAPPING_DONE,
-   
+
    ////////////////////////////////////////////////////////////////////////////
    // Support Units
    ////////////////////////////////////////////////////////////////////////////
@@ -451,7 +450,7 @@ uint64 GlobalBoardConfig[] =
                 PARAMS_DONE,
    MAPPING_DONE,
 
-	
+
    ////////////////////////////////////////////////////////////////////////////
    // Audio Units
    ////////////////////////////////////////////////////////////////////////////
@@ -461,15 +460,15 @@ uint64 GlobalBoardConfig[] =
    ////////////////////////////////////////////////////////////////////////////
    //
    // AC3
-   // 
-   CREATE_UNIT (VDRUID_AC3_DECODER, CreatePhysicalAC3Decoder),
-		DWORD_PARAM(TCTP_AC3_DECODER),	// Thread priority
-		DWORD_PARAM(TCSS_AC3_DECODER),	// Thread stack size
+   //
+	CREATE_UNIT (VDRUID_AC3_DECODER, CreatePhysicalAC3Decoder),
+		DWORD_PARAM(TCTP_AC3_DECODER),		// Thread priority
+		DWORD_PARAM(TCSS_AC3_DECODER),		// Thread stack size
 		STRING_PARAM(TCTN_AC3_DECODER),	// Thread Name
-		DWORD_PARAM(60),			// Data Buffer Count
-		DWORD_PARAM(6144),	// Data Buffer Size, 6 blocks of size 6*256 equals 1 frame in floats. 1 float = 4 Bytes
-		DWORD_PARAM(4),			// Memory Alignment Factor In Bytes
-		DWORD_PARAM(6144),	// Data Buffer Block Size
+		DWORD_PARAM(60),					// Data Buffer Count
+		DWORD_PARAM(6144),					// Data Buffer Size, 6 blocks of size 6*256 equals 1 frame in floats. 1 float = 4 Bytes
+		DWORD_PARAM(4),					// Memory Alignment Factor In Bytes
+		DWORD_PARAM(6144),					// Data Buffer Block Size
 	PARAMS_DONE,
 		VDRUID_PLAYBACK_LINEAR_MEMORY_POOL, PARAMS_DONE,
 		VDRUID_MESSAGE_DISPATCHER, PARAMS_DONE,
@@ -478,8 +477,8 @@ uint64 GlobalBoardConfig[] =
    ////////////////////////////////////////////////////////////////////////
    // Audio Renderer Units
    ////////////////////////////////////////////////////////////////////////
-   
-   CREATE_UNIT (VDRUID_SDL2AUDIO_RENDERER, CreateSDL2AudioRenderer),
+
+	CREATE_UNIT (VDRUID_SDL2AUDIO_RENDERER, CreateSDL2AudioRenderer),
 	PARAMS_DONE,
 		VDRUID_MESSAGE_DISPATCHER, PARAMS_DONE,
 	MAPPING_DONE,
@@ -499,24 +498,24 @@ uint64 GlobalBoardConfig[] =
    // Video Decode Units
    ////////////////////////////////////////////////////////////////////////////
 
-   CREATE_UNIT (VDRUID_MPEG_VIDEO_STREAM_DECODER, CreateMPEGVideoDecoder),
-               DWORD_PARAM(TCTP_WIN32_DV_DECODER),  // Thread priority
-               DWORD_PARAM(TCSS_WIN32_DV_DECODER),  // Stack size
-               STRING_PARAM(TCTN_WIN32_DV_DECODER), // Thread name
-               DWORD_PARAM(4),     // Data Buffer Count
-               DWORD_PARAM(2048),   // Data Buffer Size, 6 blocks of size 6*256 equals 1 frame in floats. 1 float = 4 Bytes
-               DWORD_PARAM(4),      // Memory Alignment Factor In Bytes
-               DWORD_PARAM(2048),   // Data Buffer Block Size
-   PARAMS_DONE,
-      VDRUID_PLAYBACK_LINEAR_MEMORY_POOL, PARAMS_DONE,
+	CREATE_UNIT (VDRUID_MPEG_VIDEO_STREAM_DECODER, CreateMPEGVideoDecoder),
+		DWORD_PARAM(TCTP_WIN32_DV_DECODER),		// Thread priority
+		DWORD_PARAM(TCSS_WIN32_DV_DECODER),		// Stack size
+		STRING_PARAM(TCTN_WIN32_DV_DECODER),		// Thread name
+		DWORD_PARAM(PAL_DVD_VIDEO_FRAME_NUMBER),	// Data Buffer Count
+		DWORD_PARAM(PAL_DVD_VIDEO_FRAME_SIZE),		// Data Buffer Size
+		DWORD_PARAM(PAL_DVD_VIDEO_MEMORY_ALIGNMENT_FACTOR_IN_BYTES),	// Memory Alignment Factor In Bytes
+		DWORD_PARAM(PAL_DVD_VIDEO_FRAME_BLOCK_SIZE),					// Data Buffer Block Size
+	PARAMS_DONE,
+		VDRUID_PLAYBACK_LINEAR_MEMORY_POOL, PARAMS_DONE,
 		VDRUID_MESSAGE_DISPATCHER, PARAMS_DONE,
-   MAPPING_DONE,
+	MAPPING_DONE,
 
    ////////////////////////////////////////////////////////////////////////
    // Video Display Units
    ////////////////////////////////////////////////////////////////////////
- 
-   CREATE_UNIT (VDRUID_MPEG_VIDEO_PLAYER, CreateGenericStreamingChainUnit),
+
+	CREATE_UNIT (VDRUID_MPEG_VIDEO_PLAYER, CreateGenericStreamingChainUnit),
 		DWORD_PARAM(1),	// num inputs
 		DWORD_PARAM(0),	// num outputs
 		DWORD_PARAM(0xff000000), // Connect Chain, Out(CID0) -> Unit0, In(CID0) ChainIn -> Decoder

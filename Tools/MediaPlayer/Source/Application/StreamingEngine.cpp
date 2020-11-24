@@ -21,7 +21,7 @@
 	(c==VDR_STRMCMD_STEP)?"STEP": \
 	(c==VDR_STRMCMD_FLUSH)?"FLUSH": \
 	"???")
-	
+
 #define DP_SSD DP
 #define DP_RM DP
 
@@ -105,7 +105,6 @@ STFResult PlayerStreamingParser::WaitForCompletion(void)
 
 	STFRES_RAISE_OK;
 	}
-				 
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -118,8 +117,6 @@ STFResult StreamingEngine::SendStreamData(bool preparing)
 	STFAutoMutex	lock(&streamLock);
 	STFResult		res;
 	uint32			done;
-	//uint32			i, count;
-	//uint32			*target;
 
 	for(;;)
 		{
@@ -149,7 +146,7 @@ STFResult StreamingEngine::SendStreamData(bool preparing)
 				DP_SSD("State = STSS_BEGIN_GROUP\n");
 				STFRES_REASSERT(outputFormatter.BeginGroup(0, false, false));
 
-				stsState = STSS_GET_RANGE; // NHV: Guess this was the intended state change
+				stsState = STSS_GET_RANGE; // Guess this was the intended state change
 				// intentional drop-through
 
 			case STSS_GET_RANGE:
@@ -180,21 +177,17 @@ STFResult StreamingEngine::SendStreamData(bool preparing)
 				range.block = streamBlock;
 				range.offset = 0;
 				range.size = streamBlockSize;
-				//res = (outputFormatter.PutRange(range));
-				//if (STFRES_FAILED(res))
-				//	{
-				//	DP_SSD("Data delivery bounced\n");
-				//	STFRES_RAISE(res);
-				//	}
+
 				res = (outputFormatter.PutRange(range));
-				while (res == STFRES_OBJECT_FULL)
-				{
+				while (res == STFRES_OBJECT_FULL) // Alternative is to let the caller loop instead.
+					{
 					STFRES_REASSERT(SystemTimer->WaitDuration(10));
 					res = (outputFormatter.PutRange(range));
-				}
+					}
+
 				res = (outputFormatter.Commit());
 				res = (outputFormatter.Commit());
-			
+
 				streamBlock->Release();
 				streamBlock = NULL;
 
@@ -287,9 +280,9 @@ STFResult StreamingEngine::ReceiveMessage(STFMessage & message)
 			break;
 		default:
 			DP("ReceiveMessage: unhandled message \n");
-			
+
 		}
-	
+
 	message.Complete();
 
 	STFRES_RAISE_OK;
@@ -299,10 +292,10 @@ STFResult StreamingEngine::ReceiveMessage(STFMessage & message)
 STFResult StreamingEngine::DoCommand(VDRStreamingCommand com, uint32 param)
 	{
 	STFResult res;
-	
+
 	DP("%s : ENTER\n", __FUNCTION__);
 	commandCompletionSignal.Reset();
-	
+
 	res = playerProxy->SendCommand(com, param);
 	DP("Sending command %d (%s).\n", com, DBG_VDR_CMD_STRING(com));
 
@@ -328,9 +321,9 @@ STFResult StreamingEngine::DoCommand(VDRStreamingCommand com, uint32 param)
 STFResult StreamingEngine::StartStreaming(void)
 	{
 	STFResult res;
-		
+
 	rangeCount = 0;
-	
+
 	DP("%s: ENTER\n", __FUNCTION__);
 
 	//inputParser.Initialize();
@@ -346,7 +339,7 @@ STFResult StreamingEngine::StartStreaming(void)
 	DP("Streaming in forward direction\n");
 
 	stsState = STSS_BEGIN_SEGMENT;
-	
+
 	DP("Opening Media file\n");
 	if (streamFile == NULL)
 		{
@@ -365,7 +358,7 @@ STFResult StreamingEngine::StartStreaming(void)
 
 	res = streamingStartupSignal.WaitTimeout(STFLoPrec32BitDuration(3000));
 	if (res == STFRES_OK)
-		{	
+		{
 		STFRES_REASSERT(DoCommand(VDR_STRMCMD_DO, 0x10000));
 		}
 	else if (res == STFRES_TIMEOUT)
@@ -382,7 +375,6 @@ STFResult StreamingEngine::StartStreaming(void)
 STFResult StreamingEngine::WaitStreaming(void)
 	{
 	  //inputParser.WaitForCompletion();
-
 	STFRES_RAISE_OK;
 	}
 
@@ -397,24 +389,24 @@ STFResult StreamingEngine::EndStreaming(void)
 STFResult StreamingEngine::TestStreaming(void)
 	{
 	STFTimer         myTimer;
-	
+
 	STFRES_REASSERT(PrepareTest());
-	
+
 	DP("StreamingEngine PrepareStreaming\n");
 	STFRES_REASSERT(StartStreaming());
-	
+
 	DP("StreamingEngine Wait 10 seconds\n");
 	STFRES_REASSERT(myTimer.WaitDuration(10000));
-	
+
 	DP("StreamingEngine EndStreaming\n");
 	STFRES_REASSERT(EndStreaming());
-	
+
 	DP("DVDtestApp Dumping...");
 	WriteDebugRecording ("trace_dump.txt");
-	
+
 	DP("StreamingEngine Wait 2 seconds\n");
 	STFRES_REASSERT(myTimer.WaitDuration(2000));
-	
+
 	DP("TestStreaming Exit.\n");
 	STFRES_RAISE_OK;
 	}
@@ -442,28 +434,28 @@ STFResult StreamingEngine::WaitForCommandtoFinish(IVDRStreamingProxyUnit * proxy
 	return res;
 	}
 
-// 
+//
 STFResult StreamingEngine::Initialize(int argc, char**argv)
-{
+	{
 	STFResult res;
 	commandCompletionSignal.Reset();
 
 	fileName = (char*) argv[1];
 
-	for (int i = 0; i < argc; ++i) 
-	{
+	for (int i = 0; i < argc; ++i)
+		{
 		DP(" Received : %s \n", argv[i]);
-	}
-	
+		}
+
 	DP("Creating an instance of the driver component, and getting its interface.\n");
 	STFRES_REASSERT(VDRCreateDriverInstance("VDRLinux", 0, driver));
 
 	DP("Asking the driver component for the UnitSet Factory interface.\n");
 	if (STFRES_IS_ERROR(driver->QueryInterface (VDRIID_VDR_UNITSET_FACTORY, (void*&)unitSetFactory)))
-	{
+		{
 		STFRES_RAISE(STFRES_NOT_ENOUGH_MEMORY);
-	}
-		
+		}
+
 	DP("Creating a UnitSet containing a Streaming Unit and a Playback Pool Allocator.\n");
 	if (STFRES_IS_ERROR(unitSetFactory->CreateUnitSet(
 				decoderUnitSet,
@@ -480,19 +472,19 @@ STFResult StreamingEngine::Initialize(int argc, char**argv)
 		VDRUID_GENERIC_PLAYBACK_POOL_ALLOCATOR,
 		VDRIID_VDR_MEMORYPOOL_ALLOCATOR,
 		(void*&)allocator)))
-	{
+		{
 		STFRES_RAISE(STFRES_NOT_ENOUGH_MEMORY);
-	}
-	
-	DP("Ask for Tag Unit interface of the memory pool allocator, and configure something just for that unit.\n");	
+		}
+
+	DP("Ask for Tag Unit interface of the memory pool allocator, and configure something just for that unit.\n");
 	if (STFRES_IS_ERROR(decoderUnitSet->QueryUnitInterface(
 		VDRUID_GENERIC_PLAYBACK_POOL_ALLOCATOR,
 		VDRIID_VDR_TAG_UNIT,
 		(void*&)allocTags)))
-	{
+		{
 		STFRES_RAISE(STFRES_NOT_ENOUGH_MEMORY);
-	}
-	
+		}
+
 	DP("Configure the pool allocator for the compressed data memory pool.\n");
 	// 320kBytes size -> >= 20 streaming data packets
 	// We want it to be divided into 64 blocks of 2048 bytes each
@@ -509,10 +501,10 @@ STFResult StreamingEngine::Initialize(int argc, char**argv)
 		VDRUID_GENERIC_PLAYBACK_POOL_ALLOCATOR,
 		VDRIID_VDR_MESSAGE_SINK_REGISTRATION,
 		(void*&)memorySinkRegistration)))
-	{
+		{
 		STFRES_RAISE(STFRES_NOT_ENOUGH_MEMORY);
-	}
-	
+		}
+
 	DP("Register \"this\" as message sink at the Streaming Unit to receive Memory Pool Messages.\n");
 	memorySinkRegistration->RegisterMessageSink(this);
 	memorySinkRegistration->Release();
@@ -522,69 +514,68 @@ STFResult StreamingEngine::Initialize(int argc, char**argv)
 		VDRUID_DVD_STREAM_TRANSDUCER_PROXY,
 		VDRIID_VDR_STREAMING_PROXY_UNIT,
 		(void*&)playerProxy)))
-	{
+		{
 		STFRES_RAISE(STFRES_NOT_ENOUGH_MEMORY);
-	}
-	
+		}
+
 	playerProxy->GetState(curState);
 	DP("Initial state of Player Streaming Chain is: %d\n", curState);
-	
+
 	DP("Get Message Sink Registration interface of the DVD Stream Transducer Streaming Chain Unit.\n");
 	if (STFRES_IS_ERROR(decoderUnitSet->QueryUnitInterface(
 		VDRUID_DVD_STREAM_TRANSDUCER_PROXY,
 		VDRIID_VDR_MESSAGE_SINK_REGISTRATION,
 		(void*&)sinkRegistration)))
-	{
+		{
 		STFRES_RAISE(STFRES_NOT_ENOUGH_MEMORY);
-	}
-	
+		}
+
 	DP("Register \"this\" as message sink at the Streaming Unit.\n");
 	sinkRegistration->RegisterMessageSink(this);
-	
 
 	//DP("Connect input & output\n");
 	//if (STFRES_IS_ERROR(inputParser.Connect(playerProxy, 1)))
-	//{
+	//	{
 	//	DP("### Connecting output of playerProxy failed!\n");
-	//}
+	//	}
 	//else
-	//{
+	//	{
 	//	DP("inputParser.Connect(playerProxy, 1) succesfull.\n");
-	//}
+	//	}
 
 	if (STFRES_IS_ERROR(outputFormatter.Connect(playerProxy, 0)))
-	{
+		{
 		DP("### Connecting input of playerProxy failed!\n");
-	}
+		}
 	else
-	{
+		{
 		DP("outputFormatter.Connect(playerProxy, 0) succesfull.\n");
-	}
+		}
 #if 0
 	if (STFRES_IS_ERROR(playerProxy->ProvideAllocator(0, allocator)))
-	{
+		{
 		DP("### ProvideAllocator failed!\n");
 		STFRES_RAISE(STFRES_NOT_ENOUGH_MEMORY);
-	}
+		}
 	else
-	{
+		{
 		DP("ProvideAllocator succesfull.\n");
-	}
+		}
 #endif
-	if (STFRES_IS_ERROR(decoderUnitSet->ActivateAndLock(VDRUALF_REALTIME_PRIORITY | VDRUALF_TIME_VALID, 
-		STFHiPrec64BitTime(), 
+	if (STFRES_IS_ERROR(decoderUnitSet->ActivateAndLock(VDRUALF_REALTIME_PRIORITY | VDRUALF_TIME_VALID,
+		STFHiPrec64BitTime(),
 		STFHiPrec32BitDuration(0))))
-	{
+		{
 		DP("### Activate of Unit Set failed!\n");
 		STFRES_RAISE(STFRES_NOT_ENOUGH_MEMORY);
-	}
-	
+		}
+
 	DP("Initialized succesfully.\n");
 	STFRES_RAISE_OK;
-}
+	}
 
 STFResult StreamingEngine::Cleanup(void)
-{
+	{
 	DP("Disconnecting Output Formatter\n");
 	outputFormatter.Disconnect();
 
@@ -615,20 +606,19 @@ STFResult StreamingEngine::Cleanup(void)
 		unitSetFactory->Release();
 		unitSetFactory = NULL;
 		}
-		
+
 	DP("Cleanup succesfully.\n");
-	
+
 	STFRES_RAISE_OK;
-}
+	}
 
 STFResult StreamingEngine::PrepareTest(void)
-{
+	{
 	STFRES_RAISE_OK;
-}
-// NHV
+	}
 
 // This function decides which sort of streaming test is executed.
-#if 0 // NHV: Not yet removed, example.
+#if 0 // Not yet removed, example.
 STFResult StreamingTestController::ExecuteTest (void)
 	{
 	STFResult res;
@@ -689,10 +679,7 @@ STFResult CommandCompletionMessageSink::WaitForCommandCompletion(uint32 waitMs)
 	}
 
 STFResult	CommandCompletionMessageSink::ResetSignal()
-	{ 
-	commandCompleteSignal.Reset(); 
+	{
+	commandCompleteSignal.Reset();
 	STFRES_RAISE_OK;
 	}
-
-
-

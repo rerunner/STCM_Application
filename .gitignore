@@ -160,5 +160,4 @@ $RECYCLE.BIN/
 *.o
 *.a
 .depend.linuxpcusrdbg
-Make/MediaPlayer
 trace_dump.txt

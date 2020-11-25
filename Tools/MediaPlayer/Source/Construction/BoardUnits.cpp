@@ -146,6 +146,7 @@ static const VDRUID VDRUID_AUDIO_RENDERER_FRAME_STREAM_REPLICATOR        = 0x400
 static const VDRUID VDRUID_PRIMARY_VIDEO_TRANSDUCER                      = 0x40003100;
 static const VDRUID VDRUID_MPEG_VIDEO_STREAM_DECODER                     = 0x40003110;
 static const VDRUID VDRUID_MPEG_VIDEO_PLAYER	            					= 0x40003111;
+static const VDRUID VDRUID_SDL2VIDEO_RENDERER				               = 0x40003112;
 //static const VDRUID VDRUID_MPEG_VIDEO_DATA_HANDLER                      = 0x40003111;
 //static const VDRUID VDRUID_STRATEGIC_MPEG_VIDEO_DECODER                 = 0x40003112;
 
@@ -512,8 +513,13 @@ uint64 GlobalBoardConfig[] =
 	MAPPING_DONE,
 
    ////////////////////////////////////////////////////////////////////////
-   // Video Display Units
+   // Video Renderer Units
    ////////////////////////////////////////////////////////////////////////
+
+	CREATE_UNIT (VDRUID_SDL2VIDEO_RENDERER, CreateSDL2VideoRenderer),
+	PARAMS_DONE,
+		VDRUID_MESSAGE_DISPATCHER, PARAMS_DONE,
+	MAPPING_DONE,
 
 	CREATE_UNIT (VDRUID_MPEG_VIDEO_PLAYER, CreateGenericStreamingChainUnit),
 		DWORD_PARAM(1),	// num inputs
@@ -522,8 +528,8 @@ uint64 GlobalBoardConfig[] =
 		DWORD_PARAM(0x00010100), // Connect Unit0, Out(CID1) -> Unit1, In(CID0) Decoder -> Renderer
 	PARAMS_DONE,
 		VDRUID_MPEG_VIDEO_STREAM_DECODER, PARAMS_DONE, //Unit 0
-		//VDRUID_SDL2VIDEO_RENDERER, PARAMS_DONE, //Unit 1
-      VDRUID_STREAMING_DEBUG_2,         PARAMS_DONE, // debug terminator 2
+		VDRUID_SDL2VIDEO_RENDERER, PARAMS_DONE, //Unit 1
+      //VDRUID_STREAMING_DEBUG_2,         PARAMS_DONE, // debug terminator 2
 	MAPPING_DONE,
 
    ////////////////////////////////////////////////////////////////////////////

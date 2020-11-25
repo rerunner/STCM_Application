@@ -36,6 +36,7 @@ DECLARE_UNIT_CREATION_FUNCTION(CreateDumpingStreamingUnit)
 // Primary Video Transducer
 //
 DECLARE_UNIT_CREATION_FUNCTION(CreateMPEGVideoDecoder)
+DECLARE_UNIT_CREATION_FUNCTION(CreateSDL2VideoRenderer)
 
 //
 // Alternate DVD Demux

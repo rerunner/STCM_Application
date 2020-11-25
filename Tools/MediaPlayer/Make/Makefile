@@ -92,7 +92,7 @@ SUBDIRS:=\
 # $(MMEPLUSHOSTBASE_W)/Source/EMBX/Host/Make/STm8000Lib \
 
 # Need to differentiante here between debug, release, ...
-THISTARGET:=MediaPlayer
+THISTARGET:=MediaPlayer.exe
 
 os21stp: dirs $(THISTARGET)
 

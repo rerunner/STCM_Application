@@ -529,7 +529,6 @@ uint64 GlobalBoardConfig[] =
 	PARAMS_DONE,
 		VDRUID_MPEG_VIDEO_STREAM_DECODER, PARAMS_DONE, //Unit 0
 		VDRUID_SDL2VIDEO_RENDERER, PARAMS_DONE, //Unit 1
-      //VDRUID_STREAMING_DEBUG_2,         PARAMS_DONE, // debug terminator 2
 	MAPPING_DONE,
 
    ////////////////////////////////////////////////////////////////////////////
@@ -548,9 +547,8 @@ uint64 GlobalBoardConfig[] =
                 PARAMS_DONE,
       VDRUID_DVD_DEMULTIPLEXER, PARAMS_DONE,
       VDRUID_MPEG_VIDEO_PLAYER, PARAMS_DONE,
-      //VDRUID_STREAMING_DEBUG_2,         PARAMS_DONE, // debug terminator 2
       VDRUID_AC3_PLAYER, PARAMS_DONE,
-      VDRUID_STREAMING_DEBUG_3, PARAMS_DONE, // debug terminator 3
+      VDRUID_STREAMING_DEBUG_3, PARAMS_DONE, // Subpicture, now debug terminator 3
    MAPPING_DONE,
 
    CREATE_UNIT (VDRUID_DVD_STREAM_TRANSDUCER_PROXY, CreateSingleStreamingProxyUnit),
@@ -585,11 +583,11 @@ uint64 GlobalBoardConfig[] =
                 DWORD_PARAM(1), // num inputs
                 DWORD_PARAM(3), // num outputs
                 // REPLICATOR
-                DWORD_PARAM(0xff000000), // Connect Unit7, Out1 -> Unit0, In0					
+                DWORD_PARAM(0xff000000), // Connect Unit7, Out1 -> Unit0, In0
                 DWORD_PARAM(0x00010100), // Connect Unit0, Out1 -> Unit1, In0
                 DWORD_PARAM(0x00020200), // Connect Unit0, Out2 -> Unit2, In0
                 DWORD_PARAM(0x00030300), // Connect Unit0, Out3 -> Unit3, In0
-                // SPLITTER to UNPACKER		
+                // SPLITTER to UNPACKER
                 DWORD_PARAM(0x01010400),// Connect Unit1, Out0 -> Unit4, In0
                 DWORD_PARAM(0x02010500),// Connect Unit2, Out0 -> Unit5, In0
                 DWORD_PARAM(0x03010600),// Connect Unit3, Out0 -> Unit6, In0

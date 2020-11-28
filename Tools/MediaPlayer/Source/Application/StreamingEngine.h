@@ -78,6 +78,8 @@ class StreamingEngine : public DispatchedSTFMessageSink
 		IVDRMessageSinkRegistration *sinkRegistration, *memorySinkRegistration;
 		VDRStreamingState            curState;       /// Current state of Streaming Chain
 
+		bool		segmentCompleted;
+
 		enum StreamingTestStreamState
 			{
 			STSS_INIT,		  
@@ -109,7 +111,6 @@ class StreamingEngine : public DispatchedSTFMessageSink
 
 		STFResult WaitForCommandtoFinish(IVDRStreamingProxyUnit * proxy, int waitMs=2000, VDRStreamingState targetState=VDR_STRMSTATE_READY);
 
-
 	public:
 		StreamingEngine(IVDRBase * driver) : 
 			DispatchedSTFMessageSink(threadedDispatcher = new ThreadedSTFMessageDispatcher("MessageThread", 20000, STFTP_NORMAL, dispatcher = new TriggeredWaitableQueuedSTFMessageProcessingDispatcher(32)))
@@ -121,6 +122,8 @@ class StreamingEngine : public DispatchedSTFMessageSink
 			streamFile = NULL;
 
 			stsState = STSS_INIT;
+
+			segmentCompleted = false;
 			}
 
 		virtual ~StreamingEngine()
@@ -131,7 +134,7 @@ class StreamingEngine : public DispatchedSTFMessageSink
 		STFResult TestStreaming(void);
 		STFResult Initialize (int argc, char**argv);
 		STFResult Cleanup(void);
-		STFResult PrepareTest(void); //NHV
+		STFResult PrepareTest(void);
 	};
 
 

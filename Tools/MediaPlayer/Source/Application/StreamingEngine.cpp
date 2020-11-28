@@ -23,7 +23,7 @@
 	"???")
 
 #define DP_SSD DP
-#define DP_RM DP
+#define DP_RM DP_EMPTY
 
 ///////////////////////////////////////////////////////////////////////////////
 // Player Streaming Parser
@@ -179,13 +179,11 @@ STFResult StreamingEngine::SendStreamData(bool preparing)
 				range.size = streamBlockSize;
 
 				res = (outputFormatter.PutRange(range));
-				while (res == STFRES_OBJECT_FULL) // Alternative is to let the caller loop instead.
+				if (STFRES_FAILED(res))
 					{
-					STFRES_REASSERT(SystemTimer->WaitDuration(10));
-					res = (outputFormatter.PutRange(range));
+					//DP_SSD("Data delivery bounced\n");
+					STFRES_RAISE(res);
 					}
-
-				res = (outputFormatter.Commit());
 				res = (outputFormatter.Commit());
 
 				streamBlock->Release();
@@ -277,6 +275,7 @@ STFResult StreamingEngine::ReceiveMessage(STFMessage & message)
 		case VDRMID_STRM_SEGMENT_END:
 		  //inputParser.segmentCompleted = true;
 		  //inputParser.SetThreadSignal();
+		  segmentCompleted = true;
 			break;
 		default:
 			DP("ReceiveMessage: unhandled message \n");
@@ -293,11 +292,10 @@ STFResult StreamingEngine::DoCommand(VDRStreamingCommand com, uint32 param)
 	{
 	STFResult res;
 
-	DP("%s : ENTER\n", __FUNCTION__);
 	commandCompletionSignal.Reset();
 
-	res = playerProxy->SendCommand(com, param);
 	DP("Sending command %d (%s).\n", com, DBG_VDR_CMD_STRING(com));
+	res = playerProxy->SendCommand(com, param);
 
 	if (res == STFRES_PROCESSING_COMMAND)
 		DP("Already processing command.\n");
@@ -323,8 +321,6 @@ STFResult StreamingEngine::StartStreaming(void)
 	STFResult res;
 
 	rangeCount = 0;
-
-	DP("%s: ENTER\n", __FUNCTION__);
 
 	//inputParser.Initialize();
 	//DP("inputParser Initialized\n");
@@ -374,7 +370,12 @@ STFResult StreamingEngine::StartStreaming(void)
 
 STFResult StreamingEngine::WaitStreaming(void)
 	{
-	  //inputParser.WaitForCompletion();
+//	STFTimer         myTimer;
+
+	while ((stsState != STSS_FINAL) && (!segmentCompleted))
+		{
+		STFRES_REASSERT(SystemTimer->WaitDuration(100)); //100ms
+		}
 	STFRES_RAISE_OK;
 	}
 
@@ -388,15 +389,13 @@ STFResult StreamingEngine::EndStreaming(void)
 
 STFResult StreamingEngine::TestStreaming(void)
 	{
-	STFTimer         myTimer;
-
 	STFRES_REASSERT(PrepareTest());
 
 	DP("StreamingEngine PrepareStreaming\n");
 	STFRES_REASSERT(StartStreaming());
 
-	DP("StreamingEngine Wait 10 seconds\n");
-	STFRES_REASSERT(myTimer.WaitDuration(10000));
+	DP("StreamingEngine WaitStreaming (until end of stream) \n");
+	STFRES_REASSERT(WaitStreaming());
 
 	DP("StreamingEngine EndStreaming\n");
 	STFRES_REASSERT(EndStreaming());
@@ -405,7 +404,7 @@ STFResult StreamingEngine::TestStreaming(void)
 	WriteDebugRecording ("trace_dump.txt");
 
 	DP("StreamingEngine Wait 2 seconds\n");
-	STFRES_REASSERT(myTimer.WaitDuration(2000));
+	STFRES_REASSERT(SystemTimer->WaitDuration(2000));
 
 	DP("TestStreaming Exit.\n");
 	STFRES_RAISE_OK;
@@ -617,48 +616,7 @@ STFResult StreamingEngine::PrepareTest(void)
 	STFRES_RAISE_OK;
 	}
 
-// This function decides which sort of streaming test is executed.
-#if 0 // Not yet removed, example.
-STFResult StreamingTestController::ExecuteTest (void)
-	{
-	STFResult res;
 
-	// First set up the data source.
-
-	// Create a harddisk file as the data source.
-	DriveSectorFile *sectorFile;
-	sectorFile = new DriveSectorFile (this->driver);
-	if (sectorFile == NULL)
-		{
-		DP("File %s, line %d: Can't create data source, no memory\n", __FILE__, __LINE__);
-		STFRES_RAISE(STFRES_NOT_ENOUGH_MEMORY);
-		}
-	res = sectorFile->Initialize ();
-	if (STFRES_FAILED(res))
-		{
-		DP("File %s, line %d: Can't init data source, error %08x\n", __FILE__, __LINE__, res);
-		STFRES_RAISE(res);
-		}
-
-	// Create a data source that works out of a memory buffer.
-	BufferedExternalFileDataSource *dataSource = new BufferedExternalFileDataSource;
-	if (dataSource == NULL)
-		{
-		DP("File %s, line %d: Can't create data source\n", __FILE__, __LINE__);
-		STFRES_RAISE(STFRES_NOT_ENOUGH_MEMORY);
-		}
-
-	streamingTest = new ProgramStreamPlayback (driver, dataSource);
-
-	// Execute the Streaming Test
-	if (STFRES_FAILED(res = streamingTest->TestStreaming()))
-		{
-		DP("Streaming test returned with error result: %x\n", res);
-		}
-
-	STFRES_RAISE_OK;
-	}
-#endif
 
 // This function is called in the context of another thread (the one of the dispatcher)!
 STFResult CommandCompletionMessageSink::ReceiveMessage(STFMessage & message)

@@ -19,6 +19,10 @@ extern const uint32	TCTP_AC3_DECODER;
 extern const uint32	TCSS_AC3_DECODER;
 extern const char 		TCTN_AC3_DECODER[];
 
+extern const uint32	TCTP_SDL2_VIDEO_RENDERER;
+extern const uint32	TCSS_SDL2_VIDEO_RENDERER;
+extern const char 		TCTN_SDL2_VIDEO_RENDERER[];
+
 extern const uint32	TCTP_WIN32_DV_DECODER;
 extern const char		TCTN_WIN32_DV_DECODER[];
 extern const uint32	TCSS_WIN32_DV_DECODER;

@@ -517,6 +517,9 @@ uint64 GlobalBoardConfig[] =
    ////////////////////////////////////////////////////////////////////////
 
 	CREATE_UNIT (VDRUID_SDL2VIDEO_RENDERER, CreateSDL2VideoRenderer),
+		DWORD_PARAM(TCTP_SDL2_VIDEO_RENDERER),		// Thread priority
+		DWORD_PARAM(TCSS_SDL2_VIDEO_RENDERER),		// Thread stack size
+		STRING_PARAM(TCTN_SDL2_VIDEO_RENDERER),	// Thread Name
 	PARAMS_DONE,
 		VDRUID_MESSAGE_DISPATCHER, PARAMS_DONE,
 	MAPPING_DONE,

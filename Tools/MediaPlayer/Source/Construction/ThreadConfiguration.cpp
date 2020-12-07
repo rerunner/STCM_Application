@@ -8,6 +8,10 @@ const uint32 TCTP_AC3_DECODER  =			STFTP_ABOVE_NORMAL;
 const uint32 TCSS_AC3_DECODER  =			20000;
 const char TCTN_AC3_DECODER[] =			"PCMPlayer";
 
+const uint32 TCTP_SDL2_VIDEO_RENDERER  =			STFTP_ABOVE_NORMAL;
+const uint32 TCSS_SDL2_VIDEO_RENDERER  =			20000;
+const char TCTN_SDL2_VIDEO_RENDERER[] =			"SDL2VRen";
+
 const uint32	TCTP_WIN32_DV_DECODER						=			STFTP_NORMAL;
 const char		TCTN_WIN32_DV_DECODER[]	   				=			"W32DVDec";
 const uint32	TCSS_WIN32_DV_DECODER						=			30000;
